@@ -20,6 +20,7 @@ object Hi {
     val score = RedditScraper.getScoreVotes(page)
     val upvotes = RedditScraper.getUpVotes(page)
     val dislikes = RedditScraper.getDownVotes(page)
+    val db=new Database();
     for (i <- 0 until posts.length) {
 
       val vote = Votes(
@@ -32,11 +33,14 @@ object Hi {
         RedditScraper.getUrl(posts(i)),
         RedditScraper.getAuthor(author(i)),
         vote)
-      //println(getVotes(score(i)))
-      println(RedditScraper.hash(post.url))
+      if(!db.checkIfRowExists(RedditScraper.hash(post.url))){
+        db.insertPost(post)
+      }
+      db.insertVote(RedditScraper.hash(post.url), vote)
     }
+    
+    db.close();
 
-    val db=new Database();
   }
 
 }

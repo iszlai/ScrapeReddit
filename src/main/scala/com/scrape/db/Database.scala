@@ -17,10 +17,14 @@ class Database {
     | USER TEXT NOT NULL ); """.stripMargin.replaceAll("\n", " ")
 
   val creatVOTES: String = """ CREATE TABLE IF NOT EXISTS VOTES(
-| ID TEXT PRIMARY KEY NOT NULL,
+| ID TEXT NOT NULL,
 | UP INT NOT NULL,
 | DOWN INT NOT NULL,
-| SCORE NOT NULL );""".stripMargin.replaceAll("\n", " ")
+| SCORE NOT NULL,
+| sqltime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL );""".stripMargin.replaceAll("\n", " ")
+
+
+
   init()
 
   def init() {
@@ -37,36 +41,45 @@ class Database {
         // if the error message is "out of memory",
         // it probably means no database file is found
         System.err.println(e.getMessage)
-    } finally {
-      try {
-        if (connection != null)
-          connection.close()
-      } catch {
-        case e: SQLException =>
-          // connection close failed.
-          System.err.println(e)
-      }
     }
   }
 
   def insertPost(post: Post) {
-    val sql = "INSERT INTO POST VALUES (?, ?,?,?);"
+    println("connection status " + connection.isClosed())
+    val sql = "INSERT INTO POST VALUES (?, ?,?,?)"
     val ps = connection.prepareStatement(sql)
-    ps.setString(0, RedditScraper.hash(post.url));
-    ps.setString(1, post.title);
-    ps.setString(2, post.url);
-    ps.setString(3, post.user);
+    ps.setString(1, RedditScraper.hash(post.url));
+    ps.setString(2, post.title);
+    ps.setString(3, post.url);
+    ps.setString(4, post.user);
     val nrOfChange = ps.executeUpdate();
   }
 
   def insertVote(id: String, vote: Votes) {
-    val sql = "INSERT INTO VOTES VALUES (?, ?,?,?);"
+    val sql = "INSERT INTO VOTES (id,up,down,score)VALUES (?, ?,?,?)"
     val ps = connection.prepareStatement(sql)
-    ps.setString(0, id);
-    ps.setInt(1, vote.up);
-    ps.setInt(1, vote.down);
-    ps.setInt(3, vote.score);
+    ps.setString(1, id);
+    ps.setInt(2, vote.up);
+    ps.setInt(3, vote.down);
+    ps.setInt(4, vote.score);
     val nrOfChange = ps.executeUpdate();
+  }
+
+  def checkIfRowExists(id: String): Boolean = {
+    val stmt = connection.createStatement();
+    val result = stmt.executeQuery("select title from post where id='"+id+"'");
+    if (!result.isBeforeFirst())  false else true;
+  }
+
+  def close() {
+    try {
+      if (connection != null)
+        connection.close()
+    } catch {
+      case e: SQLException =>
+        // connection close failed.
+        System.err.println(e)
+    }
   }
 
 }
