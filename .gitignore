@@ -1,0 +1,6 @@
+.worksheet
+bin
+project
+target
+.cache
+*.db
