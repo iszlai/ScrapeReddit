@@ -4,7 +4,8 @@ import com.gargoylesoftware.htmlunit.html.DomNode
 import com.gargoylesoftware.htmlunit.html.HtmlPage
 import scala.xml.XML
 import java.util.List
-
+import de.l3s.boilerpipe.extractors.ArticleExtractor
+import com.scrape.model.Post
 
 object RedditScraper {
 
@@ -15,7 +16,6 @@ object RedditScraper {
   def getDownVotes(page: HtmlPage): List[DomNode] = getXPath(page, "//*[@id=\"siteTable\"]/div/div[1]/div[2]")
   def getXPath(page: HtmlPage, path: String): List[DomNode] = page.getByXPath(path).asInstanceOf[List[DomNode]]
 
-  
   def getAuthor(node: DomNode): String = node.asText()
   def getTitle(node: DomNode): String = node.asText()
   def getUrl(node: DomNode): String = node.getAttributes.getNamedItem("href").getNodeValue
@@ -24,6 +24,8 @@ object RedditScraper {
     val asXMl = XML.loadString(asStringXML)
     toInt(asXMl.text.trim)
   }
+
+  def extractArticle(post: Post): String = ArticleExtractor.INSTANCE.getText(post.url);
 
   def toInt(s: String): Int = {
     try {

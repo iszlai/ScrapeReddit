@@ -14,7 +14,8 @@ class Database {
     | ID TEXT PRIMARY KEY NOT NULL, 
     | TITLE TEXT NOT NULL, 
     | URL TEXT NOT NULL, 
-    | USER TEXT NOT NULL ); """.stripMargin.replaceAll("\n", " ")
+    | USER TEXT NOT NULL,
+    | SRC TEXT NOT NULL ); """.stripMargin.replaceAll("\n", " ")
 
   val creatVOTES: String = """ CREATE TABLE IF NOT EXISTS VOTES(
 | ID TEXT NOT NULL,
@@ -28,7 +29,7 @@ class Database {
   init()
 
   def init() {
-    println("init called" + createPOST + "\n" + creatVOTES)
+    //println("init called" + createPOST + "\n" + creatVOTES)
     Class.forName("org.sqlite.JDBC")
     try {
       // create a database connection
@@ -45,13 +46,18 @@ class Database {
   }
 
   def insertPost(post: Post) {
-    println("connection status " + connection.isClosed())
-    val sql = "INSERT INTO POST VALUES (?, ?,?,?)"
+    if(connection.isClosed()){
+      println("HEY connection status is" + connection.isClosed())
+    }
+    val log=post.toString()
+    println(s"inserting post[$log]")
+    val sql = "INSERT INTO POST VALUES (?, ?,?,?,?)"
     val ps = connection.prepareStatement(sql)
     ps.setString(1, RedditScraper.hash(post.url));
     ps.setString(2, post.title);
     ps.setString(3, post.url);
     ps.setString(4, post.user);
+    ps.setString(5, post.src);
     val nrOfChange = ps.executeUpdate();
   }
 
