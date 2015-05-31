@@ -1,11 +1,11 @@
 package com.scrape
 
+import java.util.List
+
+import scala.xml.XML
+
 import com.gargoylesoftware.htmlunit.html.DomNode
 import com.gargoylesoftware.htmlunit.html.HtmlPage
-import scala.xml.XML
-import java.util.List
-import de.l3s.boilerpipe.extractors.ArticleExtractor
-import com.scrape.model.Post
 
 object RedditScraper {
 
@@ -25,7 +25,6 @@ object RedditScraper {
     toInt(asXMl.text.trim)
   }
 
-  def extractArticle(post: Post): String = ArticleExtractor.INSTANCE.getText(post.url);
 
   def toInt(s: String): Int = {
     try {
