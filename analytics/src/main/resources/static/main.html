@@ -1,8 +1,9 @@
 
 <!-- <div ng-controller="TodoListController as todoList"> -->
 <div class="container">
-	<p ng-repeat="(k,v) in typeCounts">
-		<span class="label label-primary"> {{k}} - {{v}} </span>
+	
+	<p>
+		<ul><li class="label label-primary" style="margin-left:2px;" ng-click="filterText(k)" ng-repeat="(k,v) in typeCounts"> {{k}} - {{v}} </li><ul>
 	</p>
 	<p>
 		<label> Search: <input ng-model="searchText"></label>
@@ -11,7 +12,7 @@
 <div class="container">
 	<table class="table table-striped table-bordered">
 		<thead>
-			<tr>
+			<tr class="warning">
 				<td>Source subreddit</td>
 				<td>Title</td>
 				<td>User</td>
@@ -21,7 +22,7 @@
 		<tbody>
 			<tr ng-repeat="todo in todos | filter:searchText">
 				<td class="info">{{ todo.src }}</td>
-				<td>{{ todo.title }}</td>
+				<td><a ng-href="#/chart/{{todo.id}}" >{{ todo.title }}</a></td>
 				<td class="success">{{ todo.user }}</td>
 			</tr>
 		</tbody>

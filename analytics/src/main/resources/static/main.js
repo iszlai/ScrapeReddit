@@ -4,7 +4,8 @@
 
 var redditScraper = angular.module('redditScraper', [
   'ngRoute',
-  'redditScraperControllers'
+  'redditScraperControllers',
+  'highcharts-ng'
 ]);
 
 redditScraper.config(['$routeProvider',
@@ -14,8 +15,8 @@ redditScraper.config(['$routeProvider',
         templateUrl: 'main.html',
         controller: 'TodoListController'
       }).
-      when('/votes/:phoneId', {
-        templateUrl: 'votes.html',
+      when('/chart/:id', {
+        templateUrl: 'chart.html',
         controller: 'VotesController'
       }).
       otherwise({
