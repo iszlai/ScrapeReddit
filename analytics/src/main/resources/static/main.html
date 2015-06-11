@@ -20,7 +20,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="todo in todos | filter:searchText">
+			<tr ng-repeat="todo in todos  | filter:searchText">
 				<td class="info">{{ todo.src }}</td>
 				<td><a ng-href="#/chart/{{todo.id}}" >{{ todo.title }}</a></td>
 				<td class="success">{{ todo.user }}</td>
