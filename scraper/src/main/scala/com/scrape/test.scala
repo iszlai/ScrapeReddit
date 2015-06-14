@@ -12,7 +12,9 @@ import com.scrape.model.Votes
 object Hi {
 
   def main(args: Array[String]) {
-    val subreddits = List("math", "programming", "javascript", "haskell", "java", "golang", "scala", "distributed", "elixir", "erlang", "fsharp", "GraphicsProgramming")
+    val subreddits = List("math", "programming", "javascript", "haskell", "java", "javaTIL",
+                          "golang", "scala", "distributed", "elixir", "erlang", "fsharp",
+                          "GraphicsProgramming", "technology","science","TechNewsToday")
     for (i <- subreddits) {
       println("-" * 10)
       val date: String = new java.util.Date().toString;
