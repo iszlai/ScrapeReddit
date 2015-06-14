@@ -1,0 +1,48 @@
+#Top posts per category
+
+select max(v.score) as m, p.src,p.title,p.url,p.user from votes as v,post as p where p.id=v.id group by p.src order by m desc;
+
+5629|programming|SourceForge took control of the GIMP account and is now distributing an ad-enabled installer of GIMP|https://plus.google.com/+gimp/posts/cxhB1PScFpe|halax
+2020|math|John Nash recommendation letter.|http://imgur.com/sMqfqU6|astrocosmo
+165|haskell|MonadFail proposal (MFP): Moving fail out of Monad|https://github.com/quchen/articles/blob/master/monad_fail.md|quchen
+135|javascript|Announcing “Exploring ES6”|http://www.2ality.com/2015/06/announcing-exploring-es6.html|mytwm
+124|java|Oracle vs Google case threatens foundations of software design|http://scroll.in/article/731604/oracle-vs-google-case-threatens-foundations-of-software-design|jimmyradola
+120|golang|rsc on why go does not have generics: it's technical, not political|https://news.ycombinator.com/item?id=9622417|carbocation
+69|GraphicsProgramming|SIGGRAPH 2015 Technical Papers Trailer|https://www.youtube.com/watch?v=XrYkEhs2FdA|TurkishSquirrel
+49|scala|Play 2.4.0 "Damiya" is released|https://groups.google.com/forum/#!topic/play-framework/gXYhA-BiSqk|TheMightyMegazord
+44|elixir|Why I’m betting on Elixir|https://medium.com/@kenmazaika/why-im-betting-on-elixir-7c8f847b58|byaruhaf
+34|fsharp|Why my F# projects don't use RavenDB, or the cost of the esoteric choice (Wlaschin's reply to "Why RavenDB isn't written in F#")|https://gist.github.com/swlaschin/73691bea8d6397ba97f4|tehcrashxor
+29|erlang|What We Learned From Sponsoring an Open-Source Developer for a Year|https://medium.com/@abs/what-we-learned-from-sponsoring-an-open-source-developer-for-a-year-4438568a1cfd|cxadams
+9|distributed|There is No Now: Problems with simultaneity in distributed systems|http://queue.acm.org/detail.cfm?id=2745385|based2
+
+#Users with highest posts 
+
+sqlite> select count(*),sum(v.score) as m, p.user from votes as v,post as p where p.id=v.id group by p.user order by m desc limit 10;
+80|258638|Young_Zaphod
+279|248904|halax
+273|155762|freebit
+90|150893|pavelsky
+51|135353|photonios
+446|104882|leonardofed
+60|71525|mawburn
+79|67685|arjun024
+176|66877|willvarfar
+46|66795|xxv
+
+#AVG per category
+
+sqlite> select p.src ,round(avg(v.score)) as s from post as p, votes as v where p.id=v.id group by p.src order by s desc;
+programming|164.0
+math|26.0
+haskell|23.0
+GraphicsProgramming|16.0
+elixir|13.0
+javascript|13.0
+scala|13.0
+golang|11.0
+java|10.0
+erlang|9.0
+fsharp|8.0
+distributed|2.0
+
+
