@@ -15,6 +15,7 @@
 			<tr class="warning">
 				<td>Source subreddit</td>
 				<td>Title</td>
+				<td>Stats</td>
 				<td>User</td>
 
 			</tr>
@@ -22,7 +23,8 @@
 		<tbody>
 			<tr ng-repeat="todo in todos  | filter:searchText">
 				<td class="info">{{ todo.src }}</td>
-				<td><a ng-href="#/chart/{{todo.id}}" >{{ todo.title }}</a></td>
+				<td><a ng-href="{{todo.url}}" target='_blank'>{{ todo.title }}</a></td>
+				<td><a ng-href="#/chart/{{todo.id}}" >Stats</a></td>
 				<td class="success">{{ todo.user }}</td>
 			</tr>
 		</tbody>
