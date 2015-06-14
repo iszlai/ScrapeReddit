@@ -14,6 +14,10 @@ import scala.collection.mutable.ListBuffer
 import com.scrape.model.Votes
 import scala.collection.JavaConversions._
 import org.slf4j.LoggerFactory
+import com.scrape.model.TopPostCategory
+import com.scrape.model.TopPostCategory
+import com.scrape.model.UserStat
+import com.scrape.model.CategoryStat
 
 @RestController
 class GreetingController {
@@ -60,5 +64,41 @@ class GreetingController {
     log.info(res(0).toString())
     res
   }
+ 
+  @RequestMapping(value = Array("/topPostCategory"))
+  def getTopPostCategory():java.util.List[TopPostCategory]={
+      val db: SQLite = new SQLite
+      val res: java.util.List[TopPostCategory] = db.topPostPerCategory()
+      db.close()
+      log.info("Top posts fetched")
+      res
+  }
+  
+   @RequestMapping(value = Array("/topUser"))
+  def topUser():java.util.List[UserStat]={
+      val db: SQLite = new SQLite
+      val res: java.util.List[UserStat] = db.userStats()
+      db.close()
+      log.info("Top users fetched")
+      res
+  }
+ 
+  @RequestMapping(value = Array("/categoryStat"))
+  def categoryStats():java.util.List[CategoryStat]={
+      val db: SQLite = new SQLite
+      val res: java.util.List[CategoryStat] = db.categoryStat()
+      db.close()
+      log.info("Category stats fetched")
+      res
+  }
 
+  @RequestMapping(value = Array("/lastRun"))
+  def lastRun():String={
+      val db: SQLite = new SQLite
+      val res: String= "\""+db.lastRun()+"\""
+      db.close()
+      log.info("lastRun stats fetched")
+      res
+  }  
+   
 }

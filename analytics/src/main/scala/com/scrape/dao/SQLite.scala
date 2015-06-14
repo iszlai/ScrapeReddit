@@ -10,6 +10,11 @@ import scala.collection.mutable.ListBuffer
 import com.scrape.model.Votes
 import org.slf4j.LoggerFactory
 import com.scrape.model.PostDTO
+import com.scrape.model.TopPostCategory
+import com.scrape.model.UserStat
+import com.scrape.model.UserStat
+import com.scrape.model.UserStat
+import com.scrape.model.CategoryStat
 
 class SQLite {
   val log = LoggerFactory.getLogger(classOf[SQLite])
@@ -98,6 +103,64 @@ class SQLite {
       results += PostDTO(id, title, url, user, src)
     }
     results
+  }
+
+  def topPostPerCategory(): ListBuffer[TopPostCategory] = {
+    val results: ListBuffer[TopPostCategory] = new ListBuffer
+    val stmt = connection.createStatement();
+    val resultSet = stmt.executeQuery("select max(v.score) as m," +
+      " p.src as src, p.title as title, p.url as url ,p.user as user" +
+      " from votes as v," +
+      "post as p " +
+      "where p.id=v.id group by p.src order by m desc;")
+    while (resultSet.next()) {
+      val max = resultSet.getInt("m")
+      val src = resultSet.getString("src")
+      val title = resultSet.getString("title")
+      val url = resultSet.getString("url")
+      val user = resultSet.getString("user")
+
+      results += TopPostCategory(max, src, title, url, user)
+    }
+    results
+  }
+
+  def userStats(): ListBuffer[UserStat] = {
+    val results: ListBuffer[UserStat] = new ListBuffer
+    val stmt = connection.createStatement();
+    val resultSet = stmt.executeQuery("select count(*) as nr, sum(v.score) as m, p.user as user" +
+      " from votes as v,post as p" +
+      " where p.id=v.id" +
+      " group by p.user order by m desc limit 10;")
+    while (resultSet.next()) {
+      val count = resultSet.getInt("nr")
+      val sumScore = resultSet.getInt("m")
+      val user = resultSet.getString("user")
+      results += UserStat(count, sumScore, user)
+    }
+    results
+  }
+
+  def categoryStat(): ListBuffer[CategoryStat] = {
+    val results: ListBuffer[CategoryStat] = new ListBuffer
+    val stmt = connection.createStatement();
+    val resultSet = stmt.executeQuery("select p.src as category ,round(avg(v.score)) as avgScore" +
+      " from post as p, votes as v " +
+      " where p.id=v.id " +
+      " group by p.src order by avgScore desc;")
+    while (resultSet.next()) {
+      val avgScore = resultSet.getInt("avgScore")
+      val category = resultSet.getString("category")
+      results += CategoryStat(avgScore, category)
+    }
+    results
+  }
+
+  def lastRun(): String = {
+    val stmt = connection.createStatement();
+    val resultSet = stmt.executeQuery("select sqltime from votes order by sqltime desc limit 1;")
+    val sqltime = resultSet.getString("sqltime")
+    sqltime
   }
 
   def close() {

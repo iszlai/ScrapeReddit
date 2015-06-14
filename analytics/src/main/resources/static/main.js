@@ -23,7 +23,7 @@ redditScraper.config(['$routeProvider',
         templateUrl: 'stats.html',
         controller: 'StatsController'
       }).
-      when('/stats', {
+      when('/pain', {
         templateUrl: 'pain.html',
         controller: 'TeachController'
       }).

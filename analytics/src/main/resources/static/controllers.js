@@ -4,24 +4,26 @@
 
 var redditScraperControllers = angular.module('redditScraperControllers', []);
 
-redditScraperControllers.controller('TodoListController', [ '$scope', '$http',
+redditScraperControllers.controller('TodoListController', [
+		'$scope',
+		'$http',
 		function($scope, $http) {
 
 			console.log("running TodoListController");
 			$scope.todos = JSON.parse(sessionStorage.getItem("scrapeData"));
-			if($scope.todos!=null){
-				console.log("storage data[" + JSON.stringify($scope.todos.length) + "]");
-			}
-			else {
+			if ($scope.todos != null) {
+				console.log("storage data["
+						+ JSON.stringify($scope.todos.length) + "]");
+			} else {
 				console.log("scope.todo null")
 			}
 			$scope.filterText = function(a) {
 				$scope.searchText = a;
 			}
 
-			function doGroupBy(post){
-				if(post!=null){
-				return post.map(function(d) {
+			function doGroupBy(post) {
+				if (post != null) {
+					return post.map(function(d) {
 						return d.src
 					}).reduce(function(acc, curr) {
 						if (typeof acc[curr] == 'undefined') {
@@ -31,21 +33,25 @@ redditScraperControllers.controller('TodoListController', [ '$scope', '$http',
 						}
 
 						return acc;
-					}, {});}else {
-						console.log("groupby null")
-					}
+					}, {});
+				} else {
+					console.log("groupby null")
+				}
 			}
 
 			if (angular.isUndefined($scope.todos) || $scope.todos === null) {
-				$http.get('/posts').success(function(data) {
-					console.log("fetched data");
-					$scope.todos = data;
-					sessionStorage.setItem("scrapeData", JSON.stringify(data));
-					console.log("scrapeData set again" +JSON.stringify(data.length));
-					$scope.typeCounts = doGroupBy(data);
+				$http.get('/posts').success(
+						function(data) {
+							console.log("fetched data");
+							$scope.todos = data;
+							sessionStorage.setItem("scrapeData", JSON
+									.stringify(data));
+							console.log("scrapeData set again"
+									+ JSON.stringify(data.length));
+							$scope.typeCounts = doGroupBy(data);
 
-					console.log($scope.typeCounts)
-				});
+							console.log($scope.typeCounts)
+						});
 			}
 
 			$scope.typeCounts = doGroupBy($scope.todos);
@@ -115,10 +121,34 @@ redditScraperControllers.controller('VotesController', [ '$scope', '$http',
 
 		} ]);
 
-redditScraperControllers.controller('StatsController', [ '$scope', '$http',	function($scope, $http) {
+redditScraperControllers.controller('StatsController', [ '$scope', '$http',
+		function($scope, $http) {
+
+			 $scope.items = JSON.parse(sessionStorage.getItem("scrapeData"));
+
+			$http.get('/lastRun').success(function(data) {
+				console.log("lastRun fetched")
+				$scope.lastRun = data;
+			});
+
+			$http.get('/topPostCategory').success(function(data) {
+				console.log("topPostCategory fetched")
+				$scope.topPostCategory = data;
+			});
+
+			$http.get('/topUser').success(function(data) {
+				console.log("topUser fetched")
+				$scope.topUser = data;
+			});
+
+			$http.get('/categoryStat').success(function(data) {
+				console.log("categoryStat fetched")
+				$scope.categoryStat = data;
+			});
 
 		} ]);
 
-redditScraperControllers.controller('SortController', [ '$scope', '$http',	function($scope, $http) {
+redditScraperControllers.controller('SortController', [ '$scope', '$http',
+		function($scope, $http) {
 
 		} ]);
