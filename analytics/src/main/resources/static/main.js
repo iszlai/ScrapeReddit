@@ -23,6 +23,10 @@ redditScraper.config(['$routeProvider',
         templateUrl: 'stats.html',
         controller: 'StatsController'
       }).
+      when('/stats', {
+        templateUrl: 'pain.html',
+        controller: 'TeachController'
+      }).
       otherwise({
         redirectTo: '/main'
       });

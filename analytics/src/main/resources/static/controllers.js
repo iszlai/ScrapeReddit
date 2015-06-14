@@ -118,3 +118,7 @@ redditScraperControllers.controller('VotesController', [ '$scope', '$http',
 redditScraperControllers.controller('StatsController', [ '$scope', '$http',	function($scope, $http) {
 
 		} ]);
+
+redditScraperControllers.controller('SortController', [ '$scope', '$http',	function($scope, $http) {
+
+		} ]);
