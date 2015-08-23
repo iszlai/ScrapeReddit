@@ -1,4 +1,4 @@
-package hello
+package com.scrape.service
 
 import java.util.concurrent.atomic.AtomicInteger
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,14 +18,22 @@ import com.scrape.model.TopPostCategory
 import com.scrape.model.TopPostCategory
 import com.scrape.model.UserStat
 import com.scrape.model.CategoryStat
+import javax.annotation.Resource
+import scala.beans.BeanProperty
 
 @RestController
 class GreetingController {
 
   val log = LoggerFactory.getLogger(classOf[GreetingController])
 
+  log.info("!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!")
+  
   @Value("${scrape.test}")
   var someValue: String = _
+
+  @Resource
+  @BeanProperty
+  var db: SQLite = _
 
   private val template = "Hello, %s!"
   private var counter: AtomicInteger = new AtomicInteger
@@ -42,63 +50,49 @@ class GreetingController {
 
   @RequestMapping(value = Array("/post"))
   def getPost(@RequestParam(value = "id", required = false, defaultValue = "") id: String): PostDTO = {
-    val db: SQLite = new SQLite
     val res = db.getPost(id).getOrElse(PostDTO("mockid", "mock", "mock", "mock", "mock"))
-    db.close()
     res
   }
 
   @RequestMapping(value = Array("/posts"))
   def getPost(): java.util.List[PostDTO] = {
-    val db: SQLite = new SQLite
     val res = db.getPosts()
-    db.close()
     res
   }
 
   @RequestMapping(value = Array("/votes"))
   def getVotes(@RequestParam(value = "id", required = false, defaultValue = "") id: String): java.util.List[Votes] = {
-    val db: SQLite = new SQLite
     val res: java.util.List[Votes] = db.getVotes(id)
-    db.close()
     log.info(res(0).toString())
     res
   }
- 
+
   @RequestMapping(value = Array("/topPostCategory"))
-  def getTopPostCategory():java.util.List[TopPostCategory]={
-      val db: SQLite = new SQLite
-      val res: java.util.List[TopPostCategory] = db.topPostPerCategory()
-      db.close()
-      log.info("Top posts fetched")
-      res
+  def getTopPostCategory(): java.util.List[TopPostCategory] = {
+    val res: java.util.List[TopPostCategory] = db.topPostPerCategory()
+    log.info("Top posts fetched")
+    res
   }
-  
-   @RequestMapping(value = Array("/topUser"))
-  def topUser():java.util.List[UserStat]={
-      val db: SQLite = new SQLite
-      val res: java.util.List[UserStat] = db.userStats()
-      db.close()
-      log.info("Top users fetched")
-      res
+
+  @RequestMapping(value = Array("/topUser"))
+  def topUser(): java.util.List[UserStat] = {
+    val res: java.util.List[UserStat] = db.userStats()
+    log.info("Top users fetched")
+    res
   }
- 
+
   @RequestMapping(value = Array("/categoryStat"))
-  def categoryStats():java.util.List[CategoryStat]={
-      val db: SQLite = new SQLite
-      val res: java.util.List[CategoryStat] = db.categoryStat()
-      db.close()
-      log.info("Category stats fetched")
-      res
+  def categoryStats(): java.util.List[CategoryStat] = {
+    val res: java.util.List[CategoryStat] = db.categoryStat()
+    log.info("Category stats fetched")
+    res
   }
 
   @RequestMapping(value = Array("/lastRun"))
-  def lastRun():String={
-      val db: SQLite = new SQLite
-      val res: String= "\""+db.lastRun()+"\""
-      db.close()
-      log.info("lastRun stats fetched")
-      res
-  }  
-   
+  def lastRun(): String = {
+    val res: String = "\"" + db.lastRun() + "\""
+    log.info("lastRun stats fetched")
+    res
+  }
+
 }

@@ -20,7 +20,8 @@ libraryDependencies ++= Seq(
   "org.springframework.boot" % "spring-boot-starter-tomcat" % "1.2.3.RELEASE" % "provided",
   "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
   "org.xerial" % "sqlite-jdbc" % "3.7.2",
-  "com.typesafe.slick" %% "slick" % "3.0.0"
+  "com.typesafe.slick" %% "slick" % "3.0.0",
+  "commons-dbcp" % "commons-dbcp" % "1.4"
 )
 
 
