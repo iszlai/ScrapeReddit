@@ -72,7 +72,7 @@ class SQLite {
   }
 
   def getPosts(): java.util.List[PostDTO] = {
-    val sql = "select id,title,url,user,src from post order by rowid limit 300;"
+    val sql = "select id,title,url,user,src from post order by rowid desc limit 300;"
     val mapper = new PostDTOMapper()
     val query: java.util.Map[String, Object] = new HashMap()
     val res = namedJdbc.query(sql, query, mapper)
